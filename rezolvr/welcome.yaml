@@ -1,0 +1,52 @@
+name: welcome
+type: resource.web.app
+description: Main landing page for the boat tour workload
+provides:
+  - type: service.web.app
+    name: welcome_site
+    description: A web / BFF service for managing access to boat tours
+    params:
+      - name: message_endpoint
+        value: /message
+      - name: charters_endpoint
+        value: /catalog
+      - name: port
+        value: 3009
+      - name: imageName
+        formula: '{{.Component.Name}}'
+uses:
+  - type: environment
+    params:
+      - name: CHARTERS_ENDPOINT
+        formula: '{{with(index .Needs "service.web.app:catalog_service")}}{{.Params.charters_endpoint.Value}}{{end}}'
+      - name: CHARTERS_PORT
+        formula: '{{with(index .Needs "service.web.app:catalog_service")}}{{.Params.port.Value}}{{end}}'
+      - name: CHARTERS_HOSTNAME
+        formula: '{{with(index .Needs "service.web.app:catalog_service")}}{{.Params.imageName.Value}}{{end}}'
+      - name: ORDERS_ENDPOINT
+        formula: '{{with(index .Needs "service.web.app:catalog_service")}}{{.Params.charters_endpoint.Value}}{{end}}'
+      - name: ORDERS_PORT
+        formula: '{{with(index .Needs "service.web.app:catalog_service")}}{{.Params.port.Value}}{{end}}'
+      - name: ORDERS_HOSTNAME
+        formula: '{{with(index .Needs "service.web.app:catalog_service")}}{{.Params.imageName.Value}}{{end}}'
+needs:
+  - type: service.web.app
+    name: catalog_service
+    description: Catalog microservice
+    params:
+      - name: charters_endpoint
+        required: true
+      - name: port
+        required: true
+      - name: imageName
+        required: true
+  - type: service.web.app
+    name: orders_service
+    description: Orders microservice
+    params:
+      - name: orders_endpoint
+        required: true
+      - name: port
+        required: true
+      - name: imageName
+        required: true
