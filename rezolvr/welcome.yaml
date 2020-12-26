@@ -11,24 +11,20 @@ provides:
       - name: charters_endpoint
         value: /catalog
       - name: port
-        value: 3009
+        formula: '{{with(index .Needs "environment.properties:appEnvProps")}}{{.Params.welcome_port.Value}}{{end}}'
       - name: imageName
         formula: '{{.Component.Name}}'
 uses:
   - type: environment
     params:
-      - name: CHARTERS_ENDPOINT
-        formula: '{{with(index .Needs "service.web.app:catalog_service")}}{{.Params.charters_endpoint.Value}}{{end}}'
-      - name: CHARTERS_PORT
-        formula: '{{with(index .Needs "service.web.app:catalog_service")}}{{.Params.port.Value}}{{end}}'
-      - name: CHARTERS_HOSTNAME
-        formula: '{{with(index .Needs "service.web.app:catalog_service")}}{{.Params.imageName.Value}}{{end}}'
-      - name: ORDERS_ENDPOINT
-        formula: '{{with(index .Needs "service.web.app:catalog_service")}}{{.Params.charters_endpoint.Value}}{{end}}'
-      - name: ORDERS_PORT
-        formula: '{{with(index .Needs "service.web.app:catalog_service")}}{{.Params.port.Value}}{{end}}'
-      - name: ORDERS_HOSTNAME
-        formula: '{{with(index .Needs "service.web.app:catalog_service")}}{{.Params.imageName.Value}}{{end}}'
+      - name: CHARTERS_URL
+        formula: '{{with(index .Needs "environment.properties:appEnvProps")}}{{.Params.catalog_host.Value}}{{end}}{{with(index .Needs "service.web.app:catalog_service")}}:{{.Params.port.Value}}{{.Params.charters_endpoint.Value}}{{end}}'
+      - name: ORDERS_URL
+        formula: '{{with(index .Needs "environment.properties:appEnvProps")}}{{.Params.orders_host.Value}}{{end}}{{with(index .Needs "service.web.app:orders_service")}}:{{.Params.port.Value}}{{.Params.orders_endpoint.Value}}{{end}}'
+      - name: WELCOME_PORT
+        formula: '{{with(index .Needs "environment.properties:appEnvProps")}}{{.Params.welcome_port.Value}}{{end}}'
+      - name: APP_MSG
+        formula: '{{with(index .Needs "environment.properties:appEnvProps")}}{{.Params.app_message.Value}}{{end}}'
 needs:
   - type: service.web.app
     name: catalog_service
@@ -49,4 +45,16 @@ needs:
       - name: port
         required: true
       - name: imageName
+        required: true
+  - type: environment.properties
+    name: appEnvProps
+    description: Application properties
+    params:
+      - name: app_message
+        required: true
+      - name: welcome_port
+        required: true
+      - name: catalog_host
+        required: true
+      - name: orders_host
         required: true

@@ -8,15 +8,15 @@ app.get('/message', (req, res) => {
     res.status(200).send({ message: msg })
 });
 
-const catalogEndpoint = process.env.CATALOG_ENDPOINT ? process.env.CATALOG_ENDPOINT : "localhost:8001/tours";
-const orderEndpoint = process.env.ORDER_ENDPOINT ? process.env.ORDER_ENDPOINT : "localhost:8002/orders";
+const catalogServiceURL = 'http://' + (process.env.CHARTERS_URL ? process.env.CHARTERS_URL : "localhost:8001/tours");
+const orderServiceURL = 'http://' + (process.env.ORDERS_URL ? process.env.ORDERS_URL : "localhost:8002/orders");
 
-console.log(`Catalog endpoint: ${catalogEndpoint}`);
-console.log(`Order endpoint: ${orderEndpoint}`);
+console.log(`Catalog service: ${catalogServiceURL}`);
+console.log(`Orders service: ${orderServiceURL}`);
 
 app.get('/catalog', async (req, res) => {
     try {
-        const catDetails = await axios.get(catalogEndpoint)
+        const catDetails = await axios.get(catalogServiceURL)
         res.status(200).send({ message: catDetails.data })
     } catch (ex) {
         console.log(`Error retrieving catalog details: ${ex.message}`);
@@ -26,7 +26,7 @@ app.get('/catalog', async (req, res) => {
 
 app.get('/order', async (req, res) => {
     try {
-        const orderDetails = await axios.get(orderEndpoint)
+        const orderDetails = await axios.get(orderServiceURL)
         res.status(200).send({ message: orderDetails.data })
     } catch (ex) {
         console.log(`Error retrieving order details: ${ex.message}`);
