@@ -8,28 +8,28 @@ app.get('/message', (req, res) => {
     res.status(200).send({ message: msg })
 });
 
-const catalogServiceURL = 'http://' + (process.env.CHARTERS_URL ? process.env.CHARTERS_URL : "localhost:8001/tours");
-const orderServiceURL = 'http://' + (process.env.ORDERS_URL ? process.env.ORDERS_URL : "localhost:8002/orders");
+const chartersServiceURL = 'http://' + (process.env.CHARTERS_URL ? process.env.CHARTERS_URL : "localhost:8001/tours");
+const reservationsServiceURL = 'http://' + (process.env.RESERVATIONS_URL ? process.env.RESERVATIONS_URL : "localhost:8002/reservations");
 
-console.log(`Catalog service: ${catalogServiceURL}`);
-console.log(`Orders service: ${orderServiceURL}`);
+console.log(`Charters service: ${chartersServiceURL}`);
+console.log(`Reservations service: ${reservationsServiceURL}`);
 
-app.get('/catalog', async (req, res) => {
+app.get('/charters', async (req, res) => {
     try {
-        const catDetails = await axios.get(catalogServiceURL)
+        const catDetails = await axios.get(chartersServiceURL)
         res.status(200).send({ message: catDetails.data })
     } catch (ex) {
-        console.log(`Error retrieving catalog details: ${ex.message}`);
+        console.log(`Error retrieving charter-related details: ${ex.message}`);
         res.status(400).send({ message: ex.message })
     }
 });
 
-app.get('/order', async (req, res) => {
+app.get('/reservation', async (req, res) => {
     try {
-        const orderDetails = await axios.get(orderServiceURL)
-        res.status(200).send({ message: orderDetails.data })
+        const reservationDetails = await axios.get(reservationsServiceURL)
+        res.status(200).send({ message: reservationDetails.data })
     } catch (ex) {
-        console.log(`Error retrieving order details: ${ex.message}`);
+        console.log(`Error retrieving reservation details: ${ex.message}`);
         res.status(400).send({ message: ex.message })
     }
 });

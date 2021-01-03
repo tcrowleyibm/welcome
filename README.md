@@ -1,5 +1,5 @@
 # The Welcome Repo
-Basic landing point for fictitious Fishing Charter company
+Basic landing point for fictitious GulfCharter Tours company
 
 # About
 This NodeJS application provides a basic endpoint for ensuring that it has been deployed correctly.
